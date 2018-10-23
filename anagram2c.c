@@ -1,10 +1,7 @@
-// C implementation of search and insert operations
-// on Trie
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-
 #define ARRAY_SIZE(a) sizeof(a)/sizeof(a[0])
 
 // Alphabet size (# of symbols)
@@ -82,7 +79,16 @@ bool search(struct TrieNode *root, const char *key)
 
 	return (pCrawl != NULL && pCrawl->isEndOfWord);
 }
-
+void setup(struct TrieNode **trie, char filename [])
+ {
+    FILE *fp = fopen(filename, "r");
+    while(!feof(fp)) {
+        char word [100];
+        fscanf(fp, "%s", word);
+        insert(*trie, word);
+    }
+    fclose(fp);
+}
 void swap(char *x, char *y)
 {
     char temp;
@@ -97,18 +103,15 @@ void permute(char *a, int l, int r)
    if (l == r)
     {
 
-    char keys[][8] = {"the", "a", "there", "answer", "any",
-					"by", "bye", "their"};
 
     struct TrieNode *root = createNode();
 
-	int i,j,k;
-	for (i = 0; i < ARRAY_SIZE(keys); i++)
-		insert(root, keys[i]);
-
+	 setup(&root,"dataset.txt");
 
     if(search(root,a))
-        printf("%s might be the right word",a);
+    {
+        printf("%s might be the right word\n",a);
+    }
    }
    else
    {
@@ -125,7 +128,8 @@ void permute(char *a, int l, int r)
 void main()
 {
     char s[100];
-    printf("Enter the shuffled terms\n");
+    printf("ENTER THE SHUFFLED TERMS\n");
+    printf("-------------------------\n");
     gets(s);
     int length=strlen(s);
     permute(s,0,length-1);
